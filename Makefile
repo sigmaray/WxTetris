@@ -35,3 +35,15 @@ TAGS : $(SRCS)
 .PHONY : clean
 clean :
 	-$(RM) $(EXE) $(OBJS) .depend TAGS
+
+.PHONY: docker-build
+docker-build:
+	docker build -t wxtetris .
+
+.PHONY: docker-run
+docker-run:
+	docker run -it -p 8080:8080 wxtetris
+
+.PHONY: docker-build-and-run
+docker-build-and-run:
+	docker build -t wxtetris . && docker run -it -p 8080:8080 wxtetris
