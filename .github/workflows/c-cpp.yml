@@ -2,12 +2,12 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    # branches: [ "master" ]
+  # pull_request:
+    # branches: [ "master" ]
 
 jobs:
-  build:
+  build-linux:
 
     runs-on: ubuntu-latest
 
@@ -15,11 +15,18 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install wxwidgets
       run: sudo apt-get install -y libwxgtk3.0-gtk3-dev
-    # - name: configure
-    #   run: ./configure
     - name: make
       run: make
-    # - name: make check
-    #   run: make check
-    # - name: make distcheck
-    #   run: make distcheck
+
+  build-win:
+
+    runs-on: windows-2022
+
+    steps:
+    - uses: msys2/setup-msys2@v2
+    - uses: actions/checkout@v3
+    - name: Install deps and compile app
+      shell: msys2 {0}
+      run: |
+        pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+        make
