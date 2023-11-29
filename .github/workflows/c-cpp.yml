@@ -7,39 +7,39 @@ on:
     # branches: [ "master" ]
 
 jobs:
-  build-linux:
+  # build-linux:
 
-    runs-on: ubuntu-latest
+  #   runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v3
-    # - name: Install wxwidgets
-    #   run: sudo apt-get install -y libwxgtk3.0-gtk3-dev
-    # - name: make
-    #   run: make
-    - name: Compile wxwidgets
-      run: |
-        sudo apt-get install -y libgtk2.0-dev libgtk-3-dev && \
-        wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2 && \
-        tar -xvjf wxWidgets-3.2.4.tar.bz2 && \
-        cd wxWidgets-3.2.4 && \
-        mkdir compiling && \
-        cd compiling && \
-        ../configure --disable-shared && \
-        make -j3 && \
-        sudo make install && \
-        cd ../.. && \
-        make
+  #   steps:
+  #   - uses: actions/checkout@v3
+  #   # - name: Install wxwidgets
+  #   #   run: sudo apt-get install -y libwxgtk3.0-gtk3-dev
+  #   # - name: make
+  #   #   run: make
+  #   - name: Compile wxwidgets
+  #     run: |
+  #       sudo apt-get install -y libgtk2.0-dev libgtk-3-dev && \
+  #       wget https://github.com/wxWidgets/wxWidgets/releases/download/v3.2.4/wxWidgets-3.2.4.tar.bz2 && \
+  #       tar -xvjf wxWidgets-3.2.4.tar.bz2 && \
+  #       cd wxWidgets-3.2.4 && \
+  #       mkdir compiling && \
+  #       cd compiling && \
+  #       ../configure --disable-shared && \
+  #       make -j3 && \
+  #       sudo make install && \
+  #       cd ../.. && \
+  #       make
 
-  build-win:
+  # build-win:
 
-    runs-on: windows-2022
+  #   runs-on: windows-2022
 
-    steps:
-    - uses: msys2/setup-msys2@v2
-    - uses: actions/checkout@v3
-    - name: Install deps and compile app
-      shell: msys2 {0}
-      run: |
-        pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
-        make
+  #   steps:
+  #   - uses: msys2/setup-msys2@v2
+  #   - uses: actions/checkout@v3
+  #   - name: Install deps and compile app
+  #     shell: msys2 {0}
+  #     run: |
+  #       pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+  #       make
