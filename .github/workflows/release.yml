@@ -4,6 +4,7 @@ on:
   push:
     branches: ["master", "release"]
 
+jobs:
   build-windows:
     runs-on: windows-2022
     steps:
@@ -18,15 +19,23 @@ on:
         with:
           name: Windows_qwiklabs
           path: TetrisGame.exe
-
+      - name: Get current date      
+        id: date
+        shell: msys2 {0}
+        # run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H:%M')"
+        run: echo "date=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_OUTPUT
+      - name: Echo
+        shell: bash
+        run: |
+          echo "date: ${{ steps.date.outputs.date }}"
       - name: create release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.event.head_commit.message }}
-          release_name: ${{ github.event.head_commit.message }}
+          tag_name: nightly-tag-${{ steps.date.outputs.date }}
+          release_name: nightly-release-${{ steps.date.outputs.date }}
           overwrite: true
           body: |
             Test Release v1.0.0
