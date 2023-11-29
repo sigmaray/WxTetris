@@ -15,7 +15,8 @@ jobs:
       - name: Install deps and compile app
         shell: msys2 {0}
         run: |
-          pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+          # pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+          pacman --noconfirm -S mingw-w64-i686-wxwidgets3.0-msw make gcc
           make
           ls -lah
       - uses: actions/upload-artifact@v2
