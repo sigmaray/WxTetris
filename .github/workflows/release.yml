@@ -1,0 +1,44 @@
+name: Release
+
+on:
+  push:
+    branches: ["master", "release"]
+
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: msys2/setup-msys2@v2
+      - uses: actions/checkout@v3
+      - name: Install deps and compile app
+        shell: msys2 {0}
+        run: |
+          pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+          make
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows_qwiklabs
+          path: TetrisGame.exe
+
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.event.head_commit.message }}
+          release_name: ${{ github.event.head_commit.message }}
+          overwrite: true
+          body: |
+            Test Release v1.0.0
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: TetrisGame.exe
+          asset_name: TetrisGame.exe
+          asset_content_type: application/x-msdownload
