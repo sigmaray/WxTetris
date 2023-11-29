@@ -1,0 +1,57 @@
+name: Release
+
+on:
+  push:
+    branches: ["master", "release"]
+
+jobs:
+  build-windows:
+    runs-on: windows-2022
+    steps:
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW32
+      - uses: actions/checkout@v3
+      - name: Install deps and compile app
+        shell: msys2 {0}
+        run: |
+          # pacman --noconfirm -S mingw-w64-x86_64-wxWidgets make mingw-w64-x86_64-gcc
+          pacman --noconfirm -S mingw-w64-i686-wxwidgets3.0-msw make gcc
+          make
+          ls -lah
+      - uses: actions/upload-artifact@v2
+        with:
+          name: Windows_qwiklabs
+          path: Tetris.exe
+      - name: Get current date      
+        id: date
+        shell: msys2 {0}
+        # run: echo "::set-output name=date::$(date +'%Y-%m-%d_%H:%M')"
+        run: echo "date=$(date +'%Y-%m-%d_%H-%M')" >> $GITHUB_OUTPUT
+      - name: Echo
+        shell: bash
+        run: |
+          echo "date: ${{ steps.date.outputs.date }}"
+      - name: create release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: nightly-tag-${{ steps.date.outputs.date }}
+          release_name: nightly-release-${{ steps.date.outputs.date }}
+          overwrite: true
+          body: |
+            Test Release v1.0.0
+          draft: false
+          prerelease: false
+      - name: Upload Release Asset
+        id: upload-release-asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{steps.create_release.outputs.upload_url}}
+          asset_path: Tetris.exe
+          asset_name: Tetris.exe
+          asset_content_type: application/x-msdownload

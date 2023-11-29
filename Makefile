@@ -1,8 +1,8 @@
 CC 	= g++
 CFLAGS	= -Wall
 LD	= $(CC)
-# LDFLAGS = #unused
-LDFLAGS = -static
+LDFLAGS = #unused
+# LDFLAGS = -static
 RM	= rm
 
 EXE 	= Tetris
@@ -30,7 +30,8 @@ include .depend
 	$(CC) $(WXFLAGS) $(CFLAGS) -c $<
 
 $(EXE) : $(OBJS)
-	$(LD) -o $@ $(OBJS) $(WXLINK)
+	# $(LD) -o $@ $(OBJS) $(WXLINK)
+	$(LD) -static -o $@ $(OBJS) $(WXLINK)
 
 TAGS : $(SRCS)
 	find . -regex ".*\.[cChH]\(pp\)?" -print | etags -
